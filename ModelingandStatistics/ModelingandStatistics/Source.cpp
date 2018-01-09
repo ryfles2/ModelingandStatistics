@@ -9,12 +9,22 @@ int etap1();
 int main()
 {
 	srand(time(NULL));
-	int lDni = 0;
-	int pom = etap1();
+	for (int i = 0; i < 2000; i++)
+	{
+		int lDni = 0;
+		int pom = etap1();
 
-	if (pom == 0) cout << "Nie zdane ";
-	else lDni += pom;
-
+		if (pom == 0)
+		{
+			cout << 0 << endl;
+		}
+		else
+		{
+			lDni += pom;
+			cout << lDni << endl;
+		}
+	}
+	
 
 	return 0;
 }
@@ -41,9 +51,11 @@ double boxMuler(double mi, double sigma)
 int etap1()
 {
 	int dniDodatkowe = 0;
+	int dni = 152;
+
 	double tabTrudnoœcZaliczeniaPrzedmioty1rok[15];
 
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[0] = 0.7;
+	tabTrudnoœcZaliczeniaPrzedmioty1rok[0] = 0.6;
 	tabTrudnoœcZaliczeniaPrzedmioty1rok[1] = 0.8;
 	tabTrudnoœcZaliczeniaPrzedmioty1rok[2] = 0.6;
 	tabTrudnoœcZaliczeniaPrzedmioty1rok[3] = 0.8;
@@ -60,21 +72,34 @@ int etap1()
 	tabTrudnoœcZaliczeniaPrzedmioty1rok[14] = 0.6;
 
 	double czyZal = 0.0;
-	bool flag = false;
+	bool flag = true;
 	int pom = 0;
+	int licz = 0;
 
-
-	for (auto i = 0; i < 15; i++)
+	for (auto j = 0; j < 3; j++)
 	{
-		czyZal = (double)rand() / RAND_MAX;
-		if (czyZal <= tabTrudnoœcZaliczeniaPrzedmioty1rok[i]) tabTrudnoœcZaliczeniaPrzedmioty1rok[i] = 1;
-		else flag = true;
+		if (!flag)
+		{
+			dniDodatkowe += losowanie01(5, 10);
+			flag = true;
+		}
+
+		for (auto i = 0; i < 15; i++)
+		{
+			czyZal = (double)rand() / RAND_MAX;
+			if (czyZal <= tabTrudnoœcZaliczeniaPrzedmioty1rok[i])
+			{
+				tabTrudnoœcZaliczeniaPrzedmioty1rok[i] = 1;
+
+			}
+			else
+			{
+				tabTrudnoœcZaliczeniaPrzedmioty1rok[i] += boxMuler(0.1, 0.05);
+				flag = false;
+			}
+		}
 	}
-
-
-
-
-
+	if (flag) return dni + dniDodatkowe;
 
 	return 0;
 }
