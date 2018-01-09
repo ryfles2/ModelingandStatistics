@@ -11,10 +11,12 @@ double losowanie01();
 int main()
 {
 	srand(time(NULL));
-
+	int zdalo = 0;
+	int nieZdalo = 0;
 	int lPrzedmiotowSemestr[] = { 15,10,14,12,10,8,7 };
 	double poziomTrudnosci = 0.5;
 	int lDni = 0;
+	
 
 	for (int i = 0; i < 2000; i++)
 	{
@@ -23,22 +25,20 @@ int main()
 			int pom = etap(lPrzedmiotowSemestr[j], j + 1, poziomTrudnosci);
 			if (pom == -1)
 			{
-				cout << 0 << endl;
 				lDni = 0;
 				break;
 			}
 			else
 			{
-				lDni += pom;
+				lDni += pom;	
 			}
 		}
+		if (lDni == 0)nieZdalo++;
+		else zdalo++;
 		cout << lDni << endl;
 		lDni = 0;
-	
 	}
-	
-	
-
+	cout << "zdalo " << zdalo << " nie zdalo " << nieZdalo << endl;
 	return 0;
 }
 //losowanie z przedzia³u 
@@ -84,7 +84,27 @@ int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci)
 	bool flag = true;
 	int pom = -1;
 
+
 	losTab(tabTrudnoœcZaliczeniaPrzedmiotu, liczbaPrzedmiotow, poziomTrudnosci);
+
+	//kana³ 
+	if (nrSemestru == 4)
+	{
+		double wybor = losowanie01();
+		if (wybor <= 0.3)
+		{
+			poziomTrudnosci -= boxMuler(0.1, 0.05);
+			
+		}
+		else if (wybor < 0.6)
+		{
+			poziomTrudnosci -= boxMuler(0.3, 0.05);
+		}
+		else
+		{
+			poziomTrudnosci += boxMuler(0.1, 0.05);
+		}
+	}
 
 	for (auto j = 0; j < 3; j++)
 	{
@@ -103,7 +123,7 @@ int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci)
 			}
 			else
 			{
-				tabTrudnoœcZaliczeniaPrzedmiotu[i] += boxMuler(0.1, 0.05);
+				tabTrudnoœcZaliczeniaPrzedmiotu[i] += boxMuler(0.01, 0.05);
 				flag = false;
 			}
 		}
@@ -123,7 +143,7 @@ int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci)
 	{
 		if (nrSemestru == 1)
 		{
-			while (pom != -1)
+			while (pom == -1)
 			{
 				pom = etap(liczbaPrzedmiotow, 1, poziomTrudnosci);
 			}
@@ -131,18 +151,19 @@ int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci)
 		}
 		else
 		{
-			while (pom != -1)
+			while (pom == -1)
 			{
 				pom = etap(liczbaPrzedmiotow, nrSemestru - 1, poziomTrudnosci);
 			}
 			dniDodatkowe += pom;
 		}
-		
+	
+		delete[] tabTrudnoœcZaliczeniaPrzedmiotu;
+		return dni + dniDodatkowe;
 	}
 	else if (niezaliczone > 0)
 	{
 		dniDodatkowe += losowaniePrzedzial(5, 10);
-
 		for (auto i = 0; i < liczbaPrzedmiotow; i++)
 		{
 			if (losowanie01() <= tabTrudnoœcZaliczeniaPrzedmiotu[i])
