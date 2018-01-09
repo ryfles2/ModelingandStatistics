@@ -18,7 +18,12 @@ int main()
 
 	return 0;
 }
-
+//losowanie z przedzia³u 0 1
+long losowanie01(long min, long max)
+{
+	long d = max - min + 1;
+	return rand() % d + min;
+}
 //odchylenie standardowe mi-srednia sigma-odchylenie standardowe
 double boxMuler(double mi, double sigma)
 {
