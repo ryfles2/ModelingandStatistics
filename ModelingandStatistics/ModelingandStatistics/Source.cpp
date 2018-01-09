@@ -53,6 +53,18 @@ int etap1()
 	int dniDodatkowe = 0;
 	int dni = 152;
 
+	/*
+	Tab_1a[8]
+	Tab_1b[12]
+	Tab_2a[13]
+	Tab_2b[14]
+	Tab_3a[16]
+	Tab_3b[6]
+	Tab_4[8]
+
+	Funkcja na liczenie pradopobodobieñstw (Tab[], size);
+	*/
+
 	double tabTrudnoœcZaliczeniaPrzedmioty1rok[15];
 
 	tabTrudnoœcZaliczeniaPrzedmioty1rok[0] = 0.6;
