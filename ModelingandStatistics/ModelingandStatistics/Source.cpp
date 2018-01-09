@@ -4,41 +4,58 @@
 using namespace std;
 
 double boxMuler(double mi, double sigma);
-int etap1();
+int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci);
+long losowaniePrzedzial(long min, long max);
+double losowanie01();
 
 int main()
 {
 	srand(time(NULL));
+
+	int lPrzedmiotowSemestr[] = { 15,10,14,12,10,8,7 };
+	double poziomTrudnosci = 0.5;
+	int lDni = 0;
+
 	for (int i = 0; i < 2000; i++)
 	{
-		int lDni = 0;
-		int pom = etap1();
-
-		if (pom == 0)
+		for (int j = 0; j < 7; j++)
 		{
-			cout << 0 << endl;
+			int pom = etap(lPrzedmiotowSemestr[j], j + 1, poziomTrudnosci);
+			if (pom == -1)
+			{
+				cout << 0 << endl;
+				lDni = 0;
+				break;
+			}
+			else
+			{
+				lDni += pom;
+			}
 		}
-		else
-		{
-			lDni += pom;
-			cout << lDni << endl;
-		}
+		cout << lDni << endl;
+		lDni = 0;
+	
 	}
+	
 	
 
 	return 0;
 }
-//losowanie z przedzia³u 0 1
-long losowanie01(long min, long max)
+//losowanie z przedzia³u 
+long losowaniePrzedzial(long min, long max)
 {
 	long d = max - min + 1;
 	return rand() % d + min;
 }
+double losowanie01()
+{
+	return (double)rand() / RAND_MAX;
+}
 //odchylenie standardowe mi-srednia sigma-odchylenie standardowe
 double boxMuler(double mi, double sigma)
 {
-	double y1 = (double)rand() / RAND_MAX;
-	double y2 = (double)rand() / RAND_MAX;
+	double y1 = losowanie01();
+	double y2 = losowanie01();
 
 	double r = sqrt(-2 * log(y1));
 	double theta = 2 * 3.14159265359*y2;
@@ -47,71 +64,105 @@ double boxMuler(double mi, double sigma)
 
 	return z*sigma + mi;
 }
+void losTab(double tab[], int size, double prog)
+{
+	for (auto i = 0; i < size; i++)
+	{
+		while (tab[i] < prog)
+		{
+			tab[i] = losowanie01();
+		}
+		
+	}
 
-int etap1()
+}
+int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci)
 {
 	int dniDodatkowe = 0;
-	int dni = 152;
-
-	/*
-	Tab_1a[8]
-	Tab_1b[12]
-	Tab_2a[13]
-	Tab_2b[14]
-	Tab_3a[16]
-	Tab_3b[6]
-	Tab_4[8]
-
-	Funkcja na liczenie pradopobodobieñstw (Tab[], size);
-	*/
-
-	double tabTrudnoœcZaliczeniaPrzedmioty1rok[15];
-
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[0] = 0.6;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[1] = 0.8;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[2] = 0.6;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[3] = 0.8;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[4] = 0.7;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[5] = 0.9;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[6] = 0.7;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[7] = 0.9;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[8] = 0.7;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[9] = 0.6;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[10] = 0.6;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[11] = 0.8;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[12] = 0.5;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[13] = 0.9;
-	tabTrudnoœcZaliczeniaPrzedmioty1rok[14] = 0.6;
-
-	double czyZal = 0.0;
+	const int dni = 152;
+	double * tabTrudnoœcZaliczeniaPrzedmiotu = new double[liczbaPrzedmiotow];
 	bool flag = true;
-	int pom = 0;
-	int licz = 0;
+	int pom = -1;
+
+	losTab(tabTrudnoœcZaliczeniaPrzedmiotu, liczbaPrzedmiotow, poziomTrudnosci);
 
 	for (auto j = 0; j < 3; j++)
 	{
 		if (!flag)
 		{
-			dniDodatkowe += losowanie01(5, 10);
+			dniDodatkowe += losowaniePrzedzial(5, 10);
 			flag = true;
 		}
 
-		for (auto i = 0; i < 15; i++)
+		for (auto i = 0; i < liczbaPrzedmiotow; i++)
 		{
-			czyZal = (double)rand() / RAND_MAX;
-			if (czyZal <= tabTrudnoœcZaliczeniaPrzedmioty1rok[i])
+			if (losowanie01() <= tabTrudnoœcZaliczeniaPrzedmiotu[i])
 			{
-				tabTrudnoœcZaliczeniaPrzedmioty1rok[i] = 1;
+				tabTrudnoœcZaliczeniaPrzedmiotu[i] = 1;
 
 			}
 			else
 			{
-				tabTrudnoœcZaliczeniaPrzedmioty1rok[i] += boxMuler(0.1, 0.05);
+				tabTrudnoœcZaliczeniaPrzedmiotu[i] += boxMuler(0.1, 0.05);
 				flag = false;
 			}
 		}
 	}
-	if (flag) return dni + dniDodatkowe;
+	int niezaliczone = 0;
+	for (auto i = 0; i < liczbaPrzedmiotow; i++)
+	{
+		if (tabTrudnoœcZaliczeniaPrzedmiotu[i] != 1) niezaliczone++;
+	}
 
-	return 0;
+	if (niezaliczone > 4)
+	{
+		delete[] tabTrudnoœcZaliczeniaPrzedmiotu;
+		return -1;
+	}
+	else if (niezaliczone > 2)
+	{
+		if (nrSemestru == 1)
+		{
+			while (pom != -1)
+			{
+				pom = etap(liczbaPrzedmiotow, 1, poziomTrudnosci);
+			}
+			dniDodatkowe += pom;
+		}
+		else
+		{
+			while (pom != -1)
+			{
+				pom = etap(liczbaPrzedmiotow, nrSemestru - 1, poziomTrudnosci);
+			}
+			dniDodatkowe += pom;
+		}
+		
+	}
+	else if (niezaliczone > 0)
+	{
+		dniDodatkowe += losowaniePrzedzial(5, 10);
+
+		for (auto i = 0; i < liczbaPrzedmiotow; i++)
+		{
+			if (losowanie01() <= tabTrudnoœcZaliczeniaPrzedmiotu[i])
+			{
+				tabTrudnoœcZaliczeniaPrzedmiotu[i] = 1;
+			}
+		}
+	}
+
+	niezaliczone = 0;
+	for (auto i = 0; i < liczbaPrzedmiotow; i++)
+	{
+		if (tabTrudnoœcZaliczeniaPrzedmiotu[i] != 1) niezaliczone++;
+	}
+
+	if (niezaliczone == 0)
+	{
+		delete[] tabTrudnoœcZaliczeniaPrzedmiotu;
+		return dni + dniDodatkowe;
+	}
+	delete[] tabTrudnoœcZaliczeniaPrzedmiotu;
+	return -1;
 }
