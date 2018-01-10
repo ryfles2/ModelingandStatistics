@@ -69,6 +69,7 @@ double boxMuler(double mi, double sigma)
 
 	return z*sigma + mi;
 }
+// losujemy tablicê prawdopodobienstwa teoretycznego zalicznia przedmiotu/ min prog
 void losTab(double tab[], int size, double prog)
 {
 	for (auto i = 0; i < size; i++)
@@ -77,14 +78,17 @@ void losTab(double tab[], int size, double prog)
 		{
 			tab[i] = losowanie01();
 		}
-		
 	}
 
 }
 int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci, double * tabTrudnoœcZaliczeniaPrzedmiotu)
 {
+	//dodatkowe dni potrzebne na zaliczenie semestru
 	int dniDodatkowe = 0;
+	//min liczba dni potrzebna na zaliczenie semestru
 	const int dni = 152;
+
+	//je¿eli tablica ju¿ istnieje bo powtarzamy rok to nie tworzymy jej od nowa
 	if (!tabTrudnoœcZaliczeniaPrzedmiotu)
 	{
 		tabTrudnoœcZaliczeniaPrzedmiotu = new double[liczbaPrzedmiotow];
@@ -97,7 +101,7 @@ int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci, double *
 	bool flag = true;
 	int pom = -1;
 
-	//inicjowanie tablicy
+	//inicjowanie tablicy jeœli nie powtarzamy roku
 	if (tabTrudnoœcZaliczeniaPrzedmiotu[0] == 0)
 	losTab(tabTrudnoœcZaliczeniaPrzedmiotu, liczbaPrzedmiotow, poziomTrudnosci);
 
