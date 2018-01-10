@@ -1,3 +1,3 @@
 ﻿  Source.cpp
-c:\users\ryfles\desktop\modelingandstatistics\modelingandstatistics\modelingandstatistics\source.cpp(13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\ryfles\desktop\modelingandstatistics\modelingandstatistics\modelingandstatistics\source.cpp(14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   ModelingandStatistics.vcxproj -> C:\Users\Ryfles\Desktop\ModelingandStatistics\ModelingandStatistics\Debug\ModelingandStatistics.exe

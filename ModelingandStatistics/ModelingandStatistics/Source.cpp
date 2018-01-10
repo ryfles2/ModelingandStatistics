@@ -4,7 +4,8 @@
 using namespace std;
 
 double boxMuler(double mi, double sigma);
-int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci, double * tabTrudnoœcZaliczeniaPrzedmiotu);
+int etap(int liczbaPrzedmiotow, int nrSemestru, double & poziomTrudnosci, double * tabTrudnoœcZaliczeniaPrzedmiotu);
+int obrona();
 long losowaniePrzedzial(long min, long max);
 double losowanie01();
 
@@ -38,9 +39,13 @@ int main()
 		if (max < lDni)max = lDni;
 		if (min > lDni && lDni != 0)min = lDni;
 		if (lDni != 0) zdane++;
+		if (lDni != 0) lDni += obrona();
 		cout << lDni << endl;
 		lDni = 0;
+		poziomTrudnosci = 0.5;
+		
 	}
+	
 	//cout << "zdane " << zdane << endl;
 	//cout << "max " << max << endl;
 	//cout << "min " << min << endl;
@@ -81,7 +86,7 @@ void losTab(double tab[], int size, double prog)
 	}
 
 }
-int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci, double * tabTrudnoœcZaliczeniaPrzedmiotu)
+int etap(int liczbaPrzedmiotow, int nrSemestru, double & poziomTrudnosci, double * tabTrudnoœcZaliczeniaPrzedmiotu)
 {
 	//dodatkowe dni potrzebne na zaliczenie semestru
 	int dniDodatkowe = 0;
@@ -211,4 +216,19 @@ int etap(int liczbaPrzedmiotow, int nrSemestru, double poziomTrudnosci, double *
 	delete[] tabTrudnoœcZaliczeniaPrzedmiotu;
 	tabTrudnoœcZaliczeniaPrzedmiotu = NULL;
 	return -1;
+}
+int obrona()
+{
+	int dni = losowaniePrzedzial(losowaniePrzedzial(1,14),losowaniePrzedzial(15,30));
+	double prawd = losowanie01();
+	double zdane = losowanie01();
+	//cout << zdane << endl << endl;
+	do
+	{
+		dni+= losowaniePrzedzial(losowaniePrzedzial(1, 14), losowaniePrzedzial(15, 30));
+		prawd += boxMuler(0.1, 0.05);
+		//cout << prawd << endl;
+	} while (zdane > prawd);
+
+	return dni;
 }
