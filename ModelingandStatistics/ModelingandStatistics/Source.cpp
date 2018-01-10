@@ -21,6 +21,7 @@ int main()
 	int max = 0;
 	int min = 10000;
 	int zdane = 0;
+	int jakNieZda = 1000;
 	for (int i = 0; i < 2000; i++)
 	{
 		for (int j = 0; j < 7; j++)
@@ -28,7 +29,7 @@ int main()
 			int pom = etap(lPrzedmiotowSemestr[j], j + 1, poziomTrudnosci, tabTrudnoœcZaliczeniaPrzedmiotu);
 			if (pom == -1)
 			{
-				lDni = 0;
+				lDni = jakNieZda;
 				break;
 			}
 			else
@@ -38,8 +39,8 @@ int main()
 		}
 		if (max < lDni)max = lDni;
 		if (min > lDni && lDni != 0)min = lDni;
-		if (lDni != 0) zdane++;
-		if (lDni != 0) lDni += obrona();
+		if (lDni != jakNieZda) zdane++;
+		if (lDni != jakNieZda) lDni += obrona();
 		cout << lDni << endl;
 		lDni = 0;
 		poziomTrudnosci = 0.5;
@@ -147,7 +148,7 @@ int etap(int liczbaPrzedmiotow, int nrSemestru, double & poziomTrudnosci, double
 			}
 			else
 			{
-				tabTrudnoœcZaliczeniaPrzedmiotu[i] += boxMuler(0.01, 0.05);
+				tabTrudnoœcZaliczeniaPrzedmiotu[i] += boxMuler(0.1, 0.05);
 				flag = false;
 			}
 		}
